@@ -1,9 +1,9 @@
 ﻿Welcome to Lean's  git source of OpenWrt and packages
 
 刷入固件后使用命令打开ssr plus+：
-```````````````````
+```
  echo 0xDEADBEEF > /etc/config/google_fu_mode
-```````````````````
+```
 （最新源码新增了 upx autoconf automake libtool autopoint libelf-dev依赖）
 中文：如何编译自己需要的 OpenWrt 固件
 
