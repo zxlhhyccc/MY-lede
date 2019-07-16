@@ -32,7 +32,7 @@ ifeq ($(ARCH),aarch64)
 endif
 
 PKG_NAME:=kcptun-client
-PKG_VERSION:=20190515
+PKG_VERSION:=20190715
 PKG_RELEASE:=2
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=kcptun-linux-$(PKG_ARCH_KCPTUN)-$(PKG_VERSION).tar.gz
@@ -61,6 +61,7 @@ define Build/Configure
 endef
 
 define Build/Compile
+       #chmod +x $(PKG_BUILD_DIR)/client_linux_$(PKG_ARCH_KCPTUN) && upx --ultra-brute $(PKG_BUILD_DIR)/client_linux_$(PKG_ARCH_KCPTUN)
 endef
 
 define Package/$(PKG_NAME)/install

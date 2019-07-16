@@ -23,7 +23,7 @@ define Host/Compile
 	$(call cc,otrx)
 	$(call cc,motorola-bin)
 	$(call cc,dgfirmware)
-	$(call cc,mksenaofw md5)
+	$(call cc,mksenaofw md5, -Wall --std=gnu99)
 	$(call cc,trx2usr)
 	$(call cc,ptgen)
 	$(call cc,srec2bin)
@@ -82,9 +82,10 @@ define Host/Compile
 	$(call cc,mkbuffaloimg, -Wall)
 	$(call cc,zyimage, -Wall)
 	$(call cc,mkdhpimg buffalo-lib, -Wall)
-	$(call cc,mkdlinkfw mkdlinkfw-lib, -lz -Wall --std=gnu99)
+	$(call cc,mkdlinkfw mkdlinkfw-lib, -lz -Wall --std=c99)
 	$(call cc,dns313-header, -Wall)
-	$(call cc,mksercommfw, -Wall --std=gnu99)
+	$(call cc,mksercommfw, -Wall)
+	$(call cc,nec-enc, -Wall --std=gnu99)
 endef
 
 define Host/Install

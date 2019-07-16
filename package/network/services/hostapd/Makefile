@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=hostapd
-PKG_RELEASE:=2
+PKG_RELEASE:=6
 
 PKG_SOURCE_URL:=http://w1.fi/hostap.git
 PKG_SOURCE_PROTO:=git
@@ -22,7 +22,6 @@ PKG_CPE_ID:=cpe:/a:w1.fi:hostapd
 PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS:= \
-	CONFIG_WPA_SUPPLICANT_NO_TIMESTAMP_CHECK \
 	CONFIG_PACKAGE_kmod-ath9k \
 	CONFIG_PACKAGE_kmod-cfg80211 \
 	CONFIG_PACKAGE_hostapd \
@@ -123,9 +122,6 @@ ifneq ($(LOCAL_TYPE),hostapd)
     endif
   endif
 
-  ifdef CONFIG_WPA_SUPPLICANT_NO_TIMESTAMP_CHECK
-    TARGET_CFLAGS += -DNO_TIMESTAMP_CHECK
-  endif
   ifdef CONFIG_WPA_RFKILL_SUPPORT
     DRIVER_MAKEOPTS += NEED_RFKILL=y
   endif

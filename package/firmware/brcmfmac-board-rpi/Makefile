@@ -1,8 +1,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=brcmfmac-board-rpi
-PKG_VERSION:=2018-03-12
-PKG_RELEASE:=86e88fbf0345da49555d0ec34c80b4fbae7d0cd3
+#PKG_VERSION:=2018-03-12
+#PKG_RELEASE:=86e88fbf0345da49555d0ec34c80b4fbae7d0cd3
+PKG_VERSION:=2018-08-20
+PKG_RELEASE:=b518de45ced519e8f7a499f4778100173402ae43
 PKG_FLAGS:=nonshared
 
 include $(INCLUDE_DIR)/package.mk
@@ -15,7 +17,7 @@ define Download/brcmfmac43430_sdio_txt
   FILE:=$(BRCMFMAC43430_SDIO_FILE).txt
   URL:=$(BRCMFMAC434XX_SDIO_URL)
   URL_FILE:=brcmfmac43430-sdio.txt
-  HASH:=e4ce7ad5ce72406f958ed758539b65d958d1c0eb3e46e3f8e9f02b510d88e0b0
+  HASH:=fc3949a4c32f07c18308e7e145c7615be314158e7d714a80e04e4791f16495f9
 endef
 $(eval $(call Download,brcmfmac43430_sdio_txt))
 
@@ -23,7 +25,7 @@ define Download/brcmfmac43455_sdio_txt
   FILE:=$(BRCMFMAC43455_SDIO_FILE).txt
   URL:=$(BRCMFMAC434XX_SDIO_URL)
   URL_FILE:=brcmfmac43455-sdio.txt
-  HASH:=15698c62457bcf25e60d063e6c666d6e1b7dacdf2b03e6d14ebbc619de6da6b7
+  HASH:=e971a57d928d2f2020906aca80a373565af5e4fa03357ed702a6bb5127df8b64
 endef
 $(eval $(call Download,brcmfmac43455_sdio_txt))
 

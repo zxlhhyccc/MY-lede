@@ -710,6 +710,34 @@ endef
 $(eval $(call KernelPackage,serial-8250-exar))
 
 
+define KernelPackage/regmap
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Generic register map support
+  DEPENDS:=+kmod-lib-lzo +kmod-i2c-core
+  KCONFIG:=CONFIG_REGMAP \
+	   CONFIG_REGMAP_MMIO \
+	   CONFIG_REGMAP_SPI \
+	   CONFIG_REGMAP_I2C \
+	   CONFIG_SPI=y
+  FILES:= \
+	$(LINUX_DIR)/drivers/base/regmap/regmap-i2c.ko \
+	$(LINUX_DIR)/drivers/base/regmap/regmap-mmio.ko \
+	$(if $(CONFIG_SPI),$(LINUX_DIR)/drivers/base/regmap/regmap-spi.ko)
+  AUTOLOAD:=$(call AutoLoad,21,regmap-core regmap-i2c regmap-mmio regmap-spi)
+  ifeq ($(strip $(CONFIG_EXTERNAL_KERNEL_TREE)),"")
+   ifeq ($(strip $(CONFIG_KERNEL_GIT_CLONE_URI)),"")
+    FILES += $(LINUX_DIR)/drivers/base/regmap/regmap-core.ko
+   endif
+  endif
+endef
+
+define KernelPackage/regmap/description
+ Generic register map support
+endef
+
+$(eval $(call KernelPackage,regmap))
+
+
 define KernelPackage/regmap-core
   SUBMENU:=$(OTHER_MENU)
   TITLE:=Generic register map support
