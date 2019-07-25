@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=iproute2
-PKG_VERSION:=5.1.0
-PKG_RELEASE:=1
+PKG_VERSION:=4.18.0
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/utils/net/iproute2
-PKG_HASH:=dc5a980873eabf6b00c0be976b6e5562b1400d47d1d07d2ac35d5e5acbcf7bcf
+PKG_HASH:=a9e6c70c95f513871c5e1f4e452c04fcb3c4d8a05be651bd794cd994a52daa45
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=iptables
 PKG_LICENSE:=GPL-2.0
@@ -23,7 +23,6 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSI
 
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/nls.mk
 
 define Package/iproute2/Default
   SECTION:=net
@@ -37,9 +36,8 @@ define Package/ip-tiny
 $(call Package/iproute2/Default)
  TITLE:=Routing control utility (Minimal)
  VARIANT:=tiny
- DEFAULT_VARIANT:=1
  PROVIDES:=ip
- ALTERNATIVES:=200:/sbin/ip:/usr/libexec/ip-tiny
+ ALTERNATIVES:=200:/sbin/ip:/sbin/ip-tiny
  DEPENDS:=+libnl-tiny +(PACKAGE_devlink||PACKAGE_rdma):libmnl
 endef
 
@@ -48,15 +46,13 @@ $(call Package/iproute2/Default)
  TITLE:=Routing control utility (Full)
  VARIANT:=full
  PROVIDES:=ip
- ALTERNATIVES:=300:/sbin/ip:/usr/libexec/ip-full
+ ALTERNATIVES:=300:/sbin/ip:/sbin/ip-full
  DEPENDS:=+libnl-tiny +libelf +(PACKAGE_devlink||PACKAGE_rdma):libmnl
 endef
 
 define Package/tc
 $(call Package/iproute2/Default)
   TITLE:=Traffic control utility
-  VARIANT:=tc
-  PROVIDES:=tc
   DEPENDS:=+kmod-sched-core +libxtables +libelf +(PACKAGE_devlink||PACKAGE_rdma):libmnl
 endef
 
@@ -100,15 +96,6 @@ ifeq ($(BUILD_VARIANT),tiny)
   IP_CONFIG_TINY:=y
 endif
 
-ifeq ($(BUILD_VARIANT),full)
-  HAVE_ELF:=y
-endif
-
-ifeq ($(BUILD_VARIANT),tc)
-  HAVE_ELF:=y
-  SHARED_LIBS:=y
-endif
-
 ifdef CONFIG_PACKAGE_devlink
   HAVE_MNL:=y
 endif
@@ -118,22 +105,25 @@ ifdef CONFIG_PACKAGE_rdma
 endif
 
 define Build/Configure
+	$(SED) "s,-I/usr/include/db3,," $(PKG_BUILD_DIR)/Makefile
+	$(SED) "s,^KERNEL_INCLUDE.*,KERNEL_INCLUDE=$(LINUX_DIR)/include," \
+		$(PKG_BUILD_DIR)/Makefile
+	$(SED) "s,^LIBC_INCLUDE.*,LIBC_INCLUDE=$(STAGING_DIR)/include," \
+		$(PKG_BUILD_DIR)/Makefile
 	echo "static const char SNAPSHOT[] = \"$(PKG_VERSION)-$(PKG_RELEASE)-openwrt\";" \
 		> $(PKG_BUILD_DIR)/include/SNAPSHOT.h
 endef
 
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
-TARGET_CPPFLAGS += -I$(STAGING_DIR)/usr/include/libnl-tiny
 
 MAKE_FLAGS += \
-	KERNEL_INCLUDE="$(LINUX_DIR)/user_headers/include" \
-	SHARED_LIBS=$(SHARED_LIBS) \
+	EXTRA_CCOPTS="-I$(STAGING_DIR)/usr/include/libnl-tiny" \
+	KERNEL_INCLUDE="$(LINUX_DIR)/include" \
+	SHARED_LIBS="" \
+	LDFLAGS="$(TARGET_LDFLAGS) -Wl,--gc-sections" \
 	IP_CONFIG_TINY=$(IP_CONFIG_TINY) \
-	HAVE_ELF=$(HAVE_ELF) \
 	HAVE_MNL=$(HAVE_MNL) \
 	IPT_LIB_DIR=/usr/lib/iptables \
-	XT_LIB_DIR=/usr/lib/iptables \
 	FPIC="$(FPIC)"
 
 define Build/Compile
@@ -148,13 +138,13 @@ define Build/InstallDev
 endef
 
 define Package/ip-tiny/install
-	$(INSTALL_DIR) $(1)/usr/libexec
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ip/ip $(1)/usr/libexec/ip-tiny
+	$(INSTALL_DIR) $(1)/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ip/ip $(1)/sbin/ip-tiny
 endef
 
 define Package/ip-full/install
-	$(INSTALL_DIR) $(1)/usr/libexec
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ip/ip $(1)/usr/libexec/ip-full
+	$(INSTALL_DIR) $(1)/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ip/ip $(1)/sbin/ip-full
 endef
 
 define Package/tc/install
@@ -162,10 +152,6 @@ define Package/tc/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tc/tc $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
 	$(INSTALL_BIN) ./files/15-teql $(1)/etc/hotplug.d/iface/
-ifeq ($(SHARED_LIBS),y)
-	$(INSTALL_DIR) $(1)/usr/lib/tc
-	$(CP) $(PKG_BUILD_DIR)/tc/*.so $(1)/usr/lib/tc
-endif
 endef
 
 define Package/genl/install
