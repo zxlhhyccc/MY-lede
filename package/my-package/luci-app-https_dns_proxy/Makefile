@@ -10,8 +10,8 @@ LUCI_TITLE:=HTTPS DNS Proxy Web UI
 LUCI_DESCRIPTION:=Provides Web UI for HTTPS DNS Proxy
 LUCI_DEPENDS:=+luci-mod-admin-full +https_dns_proxy
 LUCI_PKGARCH:=all
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
-include $(TOPDIR)/feeds/luci/luci.mk
+include ../../luci.mk
 
 # call BuildPackage - OpenWrt buildroot signature
