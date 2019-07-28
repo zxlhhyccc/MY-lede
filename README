@@ -2,6 +2,8 @@
  
  编译石像鬼qos插件，编译为iproute2（5.1.0）时需添加libelf.so.1依赖库，路径为/staging_dir/target-arm_cortex-a9_musl_eabi/pkginfo/libc.provides
 
+https://github.com/project-openwrt/lede
+
 刷入固件后使用命令打开ssr plus+：
 ```
  echo 0xDEADBEEF > /etc/config/google_fu_mode
