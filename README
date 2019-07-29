@@ -4,6 +4,8 @@
 
 https://github.com/project-openwrt/lede
 
+https://github.com/ma20at/lede1
+
 刷入固件后使用命令打开ssr plus+：
 ```
  echo 0xDEADBEEF > /etc/config/google_fu_mode
