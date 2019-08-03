@@ -33,7 +33,8 @@ o:value("linux-mips-hardfloat")
 o:value("linux-mips-softfloat")
 o:value("linux-mips64")
 o:value("linux-mips64le")
-o:value("linux-mipsle")
+o:value("linux-mipsle-softfloat")
+o:value("linux-mipsle-hardfloat")
 o:value("0", translate("Not Set"))
 o.default=0
 
@@ -163,7 +164,7 @@ o:value("3", translate("Every Wednesday"))
 o:value("4", translate("Every Thursday"))
 o:value("5", translate("Every Friday"))
 o:value("6", translate("Every Saturday"))
-o:value("7", translate("Every Sunday"))
+o:value("0", translate("Every Sunday"))
 o.default=1
 
 o = s:taboption("config_update", ListValue, "auto_update_time", translate("Update time (every day)"))
@@ -210,7 +211,7 @@ o:value("3", translate("Every Wednesday"))
 o:value("4", translate("Every Thursday"))
 o:value("5", translate("Every Friday"))
 o:value("6", translate("Every Saturday"))
-o:value("7", translate("Every Sunday"))
+o:value("0", translate("Every Sunday"))
 o.default=1
 
 o = s:taboption("rules_update", ListValue, "other_rule_update_day_time", translate("Update time (every day)"))
@@ -245,7 +246,7 @@ o:value("3", translate("Every Wednesday"))
 o:value("4", translate("Every Thursday"))
 o:value("5", translate("Every Friday"))
 o:value("6", translate("Every Saturday"))
-o:value("7", translate("Every Sunday"))
+o:value("0", translate("Every Sunday"))
 o.default=1
 
 o = s:taboption("geo_update", ListValue, "geo_update_day_time", translate("Update time (every day)"))
