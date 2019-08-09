@@ -9,7 +9,7 @@ local DV = SYS.exec("head -1 /usr/share/adbyby/data/video.txt | awk -F' ' '{prin
 local NR = SYS.exec("grep -v '^!' /usr/share/adbyby/data/rules.txt | wc -l")
 local NU = SYS.exec("cat /usr/share/adbyby/data/user.txt | wc -l")
 local UD = SYS.exec("cat /tmp/adbyby.updated 2>/dev/null")
-local ND = SYS.exec("cat /tmp/adbyby/adbyby_adblock/dnsmasq.adblock | wc -l")
+local ND = SYS.exec("cat /usr/share/adbyby/dnsmasq.adblock | wc -l")
 
 m = Map("adbyby")
 m.title	= translate("Adbyby Plus +")
@@ -44,7 +44,7 @@ mem.description = translate("Running Adbyby in RAM.More speed,less disk consumpt
 
 o = s:taboption("basic", Button, "restart")
 o.title = translate("Adbyby and Rule state")
-o.inputtitle = translate("Update Rules")
+o.inputtitle = translate("Restart Adbyby")
 o.description = string.format("<strong>Last Update Checked：</strong> %s<br /><strong>Lazy Rule：</strong>%s <br /><strong>Video Rule：</strong>%s", UD, DL, DV) 
 o.inputstyle = "reload"
 o.write = function()
@@ -56,20 +56,12 @@ end
 s:tab("advanced", translate("Advance Setting"))
 
 o = s:taboption("advanced", Flag, "cron_mode")
-o.title = translate("Enable automatic update rules")
+o.title = translate("Update the rule at 6 a.m. every morning and restart adbyby")
 o.default = 0
 o.rmempty = false
-o.description = translate(string.format("<strong><font color=\"blue\">Adblock Plus Host List：</font></strong> %s Lines<br /><br />", ND))
+o.description = translate(string.format("<strong><font color=blue>Adblock Plus Host List：</font></strong> %s Lines<br /><br />", ND))
 
-o = s:taboption("advanced", ListValue, "time_update")
-o.title = translate("Time to update the rule")
-for s=0,23 do
-o:value(s)
-end
-o.default=6
-o:depends("cron_mode","1")
-
-updatead = s:taboption("advanced", Button, "updatead", translate("Manually force update<br />Adblock Plus Host List"), translate("Note: It needs to download and convert the rules. The background process may takes 60-120 seconds to run. <br /> After completed it would automatically refresh, please do not duplicate click!"))
+updatead = s:taboption("advanced", Button, "updatead", translate("Manually force update<br />Adblock Plus Host List"), translate("Note: It needs to download and convert the rules. The background process may takes 60-120 seconds to run. <br / > After completed it would automatically refresh, please do not duplicate click!"))
 updatead.inputtitle = translate("Manually force update")
 updatead.inputstyle = "apply"
 updatead.write = function()
@@ -156,7 +148,7 @@ o.write = function(self, section, value)
 end
 
 t=m:section(TypedSection,"acl_rule",translate("<strong>Client Filter Mode Settings</strong>"),
-translate("Filter mode settings can be set to specific LAN clients ( <font color=\"blue\"> No filter , Global filter </font> ) . Does not need to be set by default."))
+translate("Filter mode settings can be set to specific LAN clients ( <font color=blue> No filter , Global filter </font> ) . Does not need to be set by default."))
 t.template="cbi/tblsection"
 t.sortable=true
 t.anonymous=true
